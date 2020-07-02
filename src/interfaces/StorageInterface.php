@@ -4,13 +4,13 @@
     namespace src\interfaces;
 
 
-    interface Storage
+    interface StorageInterface
     {
-        public static function addToCart();
+        public function addToCart(int $product_id, int $quantity,   $cart_id=null,  $user_id = null): bool;
 
-        public static function removeFromCart();
+        public function removeFromCart(int $product_id,  $cart_id = null): bool;
 
-        public static function clearCart();
+        public function clearCart(int $cart_id): bool;
 
-        public static function changeQuantity();
+        public function changeQuantity($product_id, $quantity, $cart_id = null): bool;
     }
