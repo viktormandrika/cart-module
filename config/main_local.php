@@ -1,6 +1,10 @@
 <?php
+/**
+ * Возможны 2 параметра, место хранения - принимает название класса и время жизни кук,
+ * Сюда же можно будет вынести настройки для ДБ, например название таблицы и название полей для хранения
+ */
 
-    return [
-        'storage' => \src\storage\Session::class,
-        'lifeTime' => 60 * 60 * 36 // Cart life time in seconds
-    ];
+return [
+    'storage' => \src\storage\Cookie::class,
+    'lifeTime' => 60 * 60 * 36 // Cart life time in seconds
+];

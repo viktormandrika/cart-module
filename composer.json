@@ -17,6 +17,7 @@
   "minimum-stability": "stable",
   "require": {
     "illuminate/events": "^6.0",
-    "illuminate/database": "^6.0"
+    "illuminate/database": "^6.0",
+    "ext-json": "*"
   }
 }

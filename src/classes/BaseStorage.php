@@ -1,59 +1,62 @@
 <?php
 
-    namespace src\classes;
+namespace src\classes;
 
-    use src\interfaces\StorageInterface;
+use src\interfaces\StorageInterface;
 
-    abstract class BaseStorage implements StorageInterface
+abstract class BaseStorage implements StorageInterface
+{
+    /**
+     * @var StorageInterface $instance
+     */
+    public static $instance;
+    /**
+     * @var array $config
+     */
+    public $config;
+    /**
+     * @var array $cart
+     */
+    protected $cart;
+
+    public function __construct($configs, $user_id = null)
     {
-        /**
-         * @var StorageInterface $instance
-         */
-        public static $instance;
-        /**
-         * @var array $config
-         */
-        public $config;
-        /**
-         * @var array $cart
-         */
-        public $cart;
-
-        public function __construct($configs, $user_id = null)
-        {
-            foreach ($configs as $name => $config) {
-                $this->config[$name] = $config;
-            }
-
-            $this->cart = $this->setCartProducts($user_id);
-
+        foreach ($configs as $name => $config) {
+            $this->config[$name] = $config;
         }
-
-        /**
-         * @return mixed
-         */
-        public function getCart()
-        {
-            return $this->cart;
-        }
-
-        /**
-         * @param null $user_id
-         */
-        public function jsonCartResponse($user_id = null): void
-        {
-            echo $this->jsonGenerate($this->cart);
-        }
-
-        /**
-         * @param  $cart
-         *
-         * @return false|string
-         */
-        protected function jsonGenerate($cart)
-        {
-            return json_encode($cart);
-        }
-
-
+        $this->setCart();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCart()
+    {
+        return $this->cart;
+    }
+
+    /**
+     * @param null $user_id
+     *
+     * @return string
+     */
+    public function jsonCartResponse($user_id = null): string
+    {
+        return $this->jsonGenerate($this->cart);
+    }
+
+    /**
+     * @param $cart
+     * @return string
+     */
+    protected function jsonGenerate($cart): string
+    {
+        return json_encode($cart);
+    }
+
+    /**
+     * @return void
+     */
+    abstract protected function setCart(): void;
+
+}
