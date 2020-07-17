@@ -6,13 +6,23 @@ namespace src\storage;
 
 use src\classes\BaseStorage;
 
+/**
+ * Class Cookie
+ * @property array $cart
+ * @property array $config
+ */
 class Cookie extends BaseStorage
 {
+    public function __construct(array $configs, int $user_id = null)
+    {
+        parent::__construct($configs, $user_id);
+        $this->setCart();
+    }
+
     /**
      * @inheritDoc
      */
-
-    public static function getInstance($config):object
+    public static function getInstance(array $config, int $user_id = null): object
     {
         if (self::$instance === null) {
             self::$instance = new self($config);
@@ -23,64 +33,55 @@ class Cookie extends BaseStorage
     /**
      * @inheritDoc
      */
-    public function addToCart(int $product_id, int $quantity, $is_ajax = false, $user_id = null): array
+    public function addToCart(int $product_id, int $quantity, int $user_id = null): bool
     {
         $this->cart['products'][$product_id] = $quantity;
-        return $this->saveCart()->getCart();
+        return $this->saveCart();
     }
-
 
     /**
      * @inheritDoc
      */
     public
-    function removeFromCart(int $product_id, int $user_id = null): array
+    function removeFromCart(int $product_id, int $user_id = null): bool
     {
         unset($this->cart['products'][$product_id]);
-        return $this->saveCart()->getCart();
+        return $this->saveCart();
     }
 
-
     /**
-     * @param int $user_id
-     *
-     * @return array
+     * @inheritDoc
      */
     public
-    function clearCart(int $user_id = null): array
+    function clearCart(int $user_id = null): bool
     {
         $this->cart['products'] = [];
-        $this->saveCart();
-        return $this->getCart();
+        return $this->saveCart();
 
     }
 
     /**
      * @inheritDoc
+     */
+    protected function setCart(int $user_id = null): void
+    {
+        if (isset($_COOKIE['cart'])) {
+            $this->cart = json_decode($_COOKIE['cart'], true);
+        }
+    }
+
+    /**
+     * @return bool
      */
     public
-    function changeQuantity(int $product_id, int $quantity, int $user_id = null): bool
+    function saveCart()
     {
-        $this->cart['products'][$product_id] = $quantity;
-        return $this->saveCart()->getCart();
+        if (setcookie('cart', json_encode($this->cart, JSON_UNESCAPED_UNICODE), time() + $this->config['lifeTime'])) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function setCart(): void
-    {
-        $this->cart = json_decode($_COOKIE['cart'], true);
-
-    }
-
-    /**
-     * @return object
-     */
-    public function saveCart(): object
-    {
-        $_COOKIE['cart'] = setcookie('cart', json_encode($this->cart, JSON_UNESCAPED_UNICODE), time() + $this->config['lifeTime']);
-        return $this;
-    }
 
 }

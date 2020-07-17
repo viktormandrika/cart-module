@@ -5,6 +5,14 @@
  */
 
 return [
-    'storage' => \src\storage\Cookie::class,
-    'lifeTime' => 60 * 60 * 36 // Cart life time in seconds
+    'mode' => 'DEV',
+    'storage' => \src\storage\DBEloquent::class, /// Storage class (Cookie / Session / DBEloquent)
+    'lifeTime' => 60 * 60 * 36, // Cart life time in seconds use in Cookie or DBEloquent,
+    'db' => [
+        'driver' => 'mysql',
+        'host' => 'localhost',
+        'database' => 'cart',
+        'username' => 'root',
+        'password' => '',
+    ]
 ];

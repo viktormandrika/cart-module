@@ -13,50 +13,44 @@ abstract class BaseStorage implements StorageInterface
     /**
      * @var array $config
      */
-    public $config;
+    protected $config;
     /**
      * @var array $cart
      */
     protected $cart;
 
-    public function __construct($configs, $user_id = null)
+    /**
+     * BaseStorage constructor.
+     * @param array $configs
+     * @param int|null $user_id
+     */
+    public function __construct(array $configs, int $user_id = null)
     {
         foreach ($configs as $name => $config) {
             $this->config[$name] = $config;
         }
-        $this->setCart();
+        $this->setCart($user_id);
     }
 
+
     /**
-     * @return mixed
+     * @param int $user_id
+     * @return void
      */
-    public function getCart()
+    abstract protected function setCart(int $user_id = null): void;
+
+    /**
+     * @param int|null $user_id
+     * @return array
+
+     */
+    public function getCart(int $user_id = null): array
     {
+        if (!$this->cart) {
+            $this->cart = [];
+        }
         return $this->cart;
     }
 
-    /**
-     * @param null $user_id
-     *
-     * @return string
-     */
-    public function jsonCartResponse($user_id = null): string
-    {
-        return $this->jsonGenerate($this->cart);
-    }
-
-    /**
-     * @param $cart
-     * @return string
-     */
-    protected function jsonGenerate($cart): string
-    {
-        return json_encode($cart);
-    }
-
-    /**
-     * @return void
-     */
-    abstract protected function setCart(): void;
 
 }

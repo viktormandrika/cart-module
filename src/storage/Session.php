@@ -6,13 +6,33 @@ namespace src\storage;
 
 use src\classes\BaseStorage;
 
+/**
+ * Class Session
+ * @property array $config
+ * @property array $cart
+ */
 class Session extends BaseStorage
 {
     /**
+     * Session constructor.
+     * @param array $configs
+     * @param int|null $user_id
+     * @propert
+     */
+    public function __construct(array $configs, int $user_id = null)
+    {
+        parent::__construct($configs, $user_id);
+        if (session_status() != 2) {
+            session_start();
+        }
+    }
+
+    /**
      * @inheritDoc
      */
-    public static function getInstance($config): object
+    public static function getInstance(array $config, int $user_id = null): object
     {
+
         if (self::$instance === null) {
             self::$instance = new self($config);
         }
@@ -22,58 +42,67 @@ class Session extends BaseStorage
     /**
      * @inheritDoc
      */
-    public function addToCart(int $product_id, int $quantity, $user_id = null): array
+    public function addToCart(int $product_id, int $quantity, int $user_id = null): bool
     {
 
         $this->cart['products'][$product_id] = $quantity;
-        return $this->saveCart()->getCart();
-
+        return $this->saveCart();
     }
 
     /**
-     * @return Session
+     * @return bool
      */
-    public function saveCart(): object
+    private function saveCart(): bool
     {
-        $_SESSION['cart'] = $this->cart;
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function removeFromCart(int $product_id, int $user_id = null): array
-    {
-        unset($this->cart['products'][$product_id], $_SESSION['cart']['products'][$product_id]);
-        return $this->getCart();
+        if ($_SESSION['cart'] = $this->cart) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
      * @inheritDoc
      */
-    public function clearCart(int $user_id = null): array
+    public function removeFromCart(int $product_id, int $user_id = null): bool
     {
-        unset($_SESSION['cart']['products']);
-        return $this->getCart();
-    }
-
-    /**
-     * @inheritDoc
-     *
-     */
-    public function changeQuantity($product_id, $quantity, int $user_id = null): bool
-    {
-        $this->cart['products'][$product_id] = $quantity;
-        return true;
+        if (isset($this->cart['products'][$product_id])) {
+            unset($this->cart['products'][$product_id]);
+            return $this->saveCart();
+        }
+        return false;
     }
 
     /**
      * @inheritDoc
      */
-    protected function setCart(): void
+    public function clearCart(int $user_id = null): bool
     {
-        $this->cart = $_SESSION['cart'];
+        if (isset($this->cart['products'])) {
+            unset($this->cart['products'], $_SESSION['cart']['products']);
+            return $this->saveCart();
+        }
+        return false;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function getCart(int $user_id = null): array
+    {
+        return $this->cart;
+    }
+
+    /**
+     * @param int|null $user_id
+     */
+    protected function setCart(int $user_id = null): void
+    {
+        if (isset($_SESSION['cart'])) {
+            $this->cart = $_SESSION['cart'];
+        } else {
+            $this->cart = [];
+        }
+    }
 
 }
