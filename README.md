@@ -28,17 +28,21 @@ PHP 7.3 или новее
 $cart = \src\Cart::run($config, 2); 
 ```
 **Добавление в корзину / изменение кол-ва продукта в корзине**<br>
+```php
 $cart->addToCart($product_id, $quantity, $user_id = null);
-
+```
 **Удаление из корзины**<br>
+```php
 $cart->removeFromCart($product_id, $user_id = null);
-
+```
 **Очистка корзины**<br>
+```php
 $cart->clearCart($user_id = null);
-
+```
 **Удаление просроченных корзин из БД**<br>
+```php
 \src\models\CartEloquent::deleteOldCarts();
-
+```
 <h2>Работа с БД</h2> 
 В случае использование Eloquent ORM - настройка подключения к БД не нужна. 
 По умолчанию модуль использует Eloquent ORM и работает в CG Framework и Laravel. Для использования в других фрейворках необходимо создать класс хранилища.
