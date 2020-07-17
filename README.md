@@ -24,8 +24,9 @@ PHP 7.3 или новее
 <h2>Методы</h2>
 
 **Инициализация корзины**<br>
+``php
 $cart = \src\Cart::run($config, 2); 
-
+``
 **Добавление в корзину / изменение кол-ва продукта в корзине**<br>
 $cart->addToCart($product_id, $quantity, $user_id = null);
 
