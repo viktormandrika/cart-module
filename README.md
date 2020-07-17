@@ -24,11 +24,7 @@ PHP 7.3 или новее
 <h2>Хранилища</h2>
 ```php
 \src\storage\DBEloquent::class
-```
-```php
 \src\storage\DBEloquent::class
-```
-```php
 \src\storage\DBEloquent::class
 ```
 
