@@ -22,11 +22,11 @@ PHP 7.3 или новее
 2. В случае использования хранилища BDEloquent - указать название таблицы в БД для хранения корзин в модели src/models/CarsEloquent.php в свойство $table
 3. В случае испольование в качестве хранилища базу данных - запустить удаление старых корзин через КРОН, метод deleteOldCarts класса CartEloquent
 <h2>Хранилища</h2>
-```php
+
+\src\storage\Cookie::class
+\src\storage\Session::class
 \src\storage\DBEloquent::class
-\src\storage\DBEloquent::class
-\src\storage\DBEloquent::class
-```
+
 
 <h2>Методы</h2>
 
